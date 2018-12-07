@@ -13,15 +13,21 @@ function dd($var){
 	die;
 }
 //打印log文件
+/**
+ * [errorLog 打印错误日志记录]
+ * @param  [type] $message [打印日志记录]
+ * @param  [type] $file    [日志文件名]
+ * @return [type]          [description]
+ */
 function errorLog($message,$file)
 {
-   $log_dir=$_SERVER['DOCUMENT_ROOT']."/log/".date('Ymd')."/";
-    //$log_dir=CACHE_ROOT."/log/".date('Y-m-d')."/";
-    // $log_dir=dirname(__FILE__)."/";
-    // echo $log_dir;die;
+   	//将日志文件放在根目录下/log/日期的文件夹名
+   	$log_dir=$_SERVER['DOCUMENT_ROOT']."/log/".date('Ymd')."/";
+    //判断是否存在文件夹，没有则创建
     if(!is_dir($log_dir)){
         @mkdir($log_dir,0777,true);
     }
+    //将错误日志记录写入文件中
     $file=$log_dir.$file;
     if(is_array($message)){
         $arr=explode(".",$file);
@@ -29,15 +35,12 @@ function errorLog($message,$file)
             error_log("<?php \n return ".var_export($message, true)."\n", 3,$file);
         }else{
              error_log(var_export($message, true)."\n", 3,$file);
-        }
-        
+        }        
     }else{
        error_log($message."\n\n", 3,$file); 
-    }
-   // xdug($message);
-    // error_log($message, 3,$file);
-   
+    }   
 }
+
 //打印错误日志方便查看
 function centers($data){
     $url=$_SERVER['HTTP_HOST']?$_SERVER['HTTP_HOST']:$_SERVER['SERVER_NAME'];
