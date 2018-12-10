@@ -11,6 +11,7 @@ class UserController extends Controller
 {
 	public $enableCsrfValidation = false;
 	
+	//设置返回数据格式为json默认为xml
 	public function beforeAction($action)
 	{
 	   return Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -18,7 +19,8 @@ class UserController extends Controller
 
 	public function actionIndex(){
 		//\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-		p(array('a'=>'red','b'=>"blue",'g'=>'green'));
+		//p(array('a'=>'red','b'=>"blue",'g'=>'green'));
+		//echo Yii::$app->params['url'];//常用参数
            return [
                'message' => 'API test Ok!',
                'code' => 100,

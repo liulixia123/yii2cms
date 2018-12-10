@@ -32,6 +32,30 @@ return [
                 ],
             ],
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,//美化url==ture
+            'enableStrictParsing' => false,//启用严格解析 
+            'showScriptName' => true, //隐藏index.php
+            'rules' => [
+                ['class' => 'yii\rest\UrlRule', 
+                'controller' => 'user'
+                ],
+            ],
+        ],
+        //接口返回的数据统一格式
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                $response->data = [
+                    'success' => $response->isSuccessful,
+                    'code' => $response->getStatusCode(),
+                    'message' => $response->statusText,
+                    'data' => $response->data,
+                ];
+                $response->statusCode = 200;
+            },
+        ],
 		/*'urlManager' => [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
