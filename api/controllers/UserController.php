@@ -18,6 +18,8 @@ class UserController extends Controller
 	}
 
 	public function actionIndex(){
+		$script = \Yii::$app->request->get("script");
+		//errorLog(Yii::$app->request->isPost,'login.log');
 		//\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		//p(array('a'=>'red','b'=>"blue",'g'=>'green'));
 		//echo Yii::$app->params['url'];//常用参数
@@ -25,6 +27,7 @@ class UserController extends Controller
            return [
                'message' => 'API test Ok!',
                'code' => 100,
+               'script' => $script,
            ];
 	}
 	/**
@@ -34,12 +37,29 @@ class UserController extends Controller
 	public function actionLogin(){
 		//errorLog(centers(Yii::$app->request->post()),'login.log');
 		//errorLog(Yii::$app->request->headers->get('User-Agent'),'login.log');
+		//判断是否是post请求
+		if(!Yii::$app->request->isPost){
+			Yii::$app->response->statusCode = Yii::$app->params['request_method_not_post'];
+        	Yii::$app->response->statusText = "请求方式应为post！";
+			return [];
+		}
+		//判断请求参数是否为空
+		if(empty(Yii::$app->request->post('username'))){
+			Yii::$app->response->statusCode = Yii::$app->params['username_not_empty'];
+        	Yii::$app->response->statusText = "用户名不能为空";
+			return [];
+		}
+		if(empty(Yii::$app->request->post('password'))){
+			Yii::$app->response->statusCode = Yii::$app->params['password_not_empty'];
+        	Yii::$app->response->statusText = "密码不能为空";
+			return [];
+		}
 		$model = new LoginForm;
 		$model->setAttributes(Yii::$app->request->post());
         if ($model->login()) {
             return ['access_token' => $model->login()];
         }else {
-        	Yii::$app->response->statusCode = 404;
+        	Yii::$app->response->statusCode = Yii::$app->params['username_or_password_error'];
         	Yii::$app->response->statusText = "用户名或密码错误！";
             //$model->validate();
             //Yii:$app->response->statusCode = 404;
