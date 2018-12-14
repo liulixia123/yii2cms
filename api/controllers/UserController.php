@@ -5,7 +5,7 @@ use yii;
 use yii\web\Controller;
 use api\models\LoginForm;
 /**
- * Site controller
+ * User Controller
  */
 class UserController extends Controller
 {
@@ -66,11 +66,35 @@ class UserController extends Controller
             return [];
         }
 	}
-
+	/**
+	 * [actionRegister 注册]
+	 * @return [type] [description]
+	 */
 	public function actionRegister(){
 		//发送短信验证码
 		$checkCode = rand(100000,999999); 
 		Yii::$app->sms->sendCheckCode('15210074957',$checkCode);
+		return ['code'=>100];
+	}
+	/**
+	 * [actionEditUser 修改或编辑用户]
+	 * @return [type] [description]
+	 */
+	public function actionEditUser(){
+		return ['code'=>100];
+	}
+	/**
+	 * [actionUpdatePassword 修改密码]
+	 * @return [type] [description]
+	 */
+	public function actionUpdatePassword(){
+		return ['code'=>100];
+	}
+	/**
+	 * [actionUserInfo 用户信息]
+	 * @return [type] [description]
+	 */
+	public function actionUserInfo(){
 		return ['code'=>100];
 	}
 }
