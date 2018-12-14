@@ -18,7 +18,11 @@ class UserController extends Controller
 	}
 
 	public function actionIndex(){
-		$script = \Yii::$app->request->get("script");
+		//$script = \Yii::$app->request->get("script");
+		//echo $script = \yii\helpers\Html::encode($script);//转义
+		//echo \yii\helpers\HtmlPurifier::process($script);//过滤
+		//errorLog($script,'log.log');
+		//die;
 		//errorLog(Yii::$app->request->isPost,'login.log');
 		//\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		//p(array('a'=>'red','b'=>"blue",'g'=>'green'));
