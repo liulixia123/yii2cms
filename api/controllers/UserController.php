@@ -18,7 +18,10 @@ class UserController extends Controller
 	}
 
 	public function actionIndex(){
-		//$script = \Yii::$app->request->get("script");
+		$script = \Yii::$app->request->get("script");
+		//取出session的值
+		$session = \Yii::$app->session;
+		$sms_user = $session->get('sms_user');	
 		//echo $script = \yii\helpers\Html::encode($script);//转义
 		//echo \yii\helpers\HtmlPurifier::process($script);//过滤
 		//errorLog($script,'log.log');
@@ -31,8 +34,29 @@ class UserController extends Controller
            return [
                'message' => 'API test Ok!',
                'code' => 100,
-               'script' => $script,
+               'script' => $sms_user,
            ];
+	}
+	/**
+	 * [actionGetYzm 获取验证码]
+	 * @return [type] [phone 手机号 code 验证码]
+	 */
+	public function actionGetYzm(){
+		$phone = Yii::$app->request->get('phone');
+		if(empty($phone)){
+			Yii::$app->response->statusCode = Yii::$app->params['phone_number_not_empty'];
+        	Yii::$app->response->statusText = "手机号码不能为空！";
+			return (object)[];
+		}
+		//生成验证码
+		$code = rand(100000,999999);
+		//存储session
+		$session = \Yii::$app->session;
+		$session->set('sms_user' , ['username' => $phone,'code' => $code]);	
+		//发送给手机号码验证码	
+		Yii::$app->sms->sendCheckCode('phone',$code);
+		return ['code' => $code];
+
 	}
 	/**
 	 * [actionLogin 登录接口]
@@ -45,18 +69,18 @@ class UserController extends Controller
 		if(!Yii::$app->request->isPost){
 			Yii::$app->response->statusCode = Yii::$app->params['request_method_not_post'];
         	Yii::$app->response->statusText = "请求方式应为post！";
-			return [];
+			return (object)[];
 		}
 		//判断请求参数是否为空
 		if(empty(Yii::$app->request->post('username'))){
 			Yii::$app->response->statusCode = Yii::$app->params['username_not_empty'];
         	Yii::$app->response->statusText = "用户名不能为空";
-			return [];
+			return (object)[];
 		}
 		if(empty(Yii::$app->request->post('password'))){
 			Yii::$app->response->statusCode = Yii::$app->params['password_not_empty'];
         	Yii::$app->response->statusText = "密码不能为空";
-			return [];
+			return (object)[];
 		}
 		$model = new LoginForm;
 		$model->setAttributes(Yii::$app->request->post());
@@ -67,7 +91,7 @@ class UserController extends Controller
         	Yii::$app->response->statusText = "用户名或密码错误！";
             //$model->validate();
             //Yii:$app->response->statusCode = 404;
-            return [];
+            return (object)[];
         }
 	}
 	/**
